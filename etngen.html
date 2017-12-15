@@ -3252,8 +3252,8 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
 					Spendkey (keep private)
 					<pre id="widgetSpendKeytxt"></pre>
 					<pre id="widgetSpendKey"></pre>
-					<hr/>
-					Mnemonic<br/><br/><span id="widgetMnemonicKey"></span>
+					<!--<hr/>
+					Mnemonic<br/><br/><span id="widgetMnemonicKey"></span>-->
 				</div>
 					
 				<div id="seedpoolarea">
@@ -3548,7 +3548,7 @@ function genwallet(lang)
 
 	seed = cnUtil.sc_reduce32(poor_mans_kdf(widgets.entropy.value));	
 	keys = cnUtil.create_address(seed);
-	mnemonic = mn_encode(seed, current_lang);
+	//mnemonic = mn_encode(seed, current_lang);
 	
 	qr=new QRCode(widgets.address, {correctLevel:QRCode.CorrectLevel.L});
 	qr.makeCode(keys.public_addr);
@@ -3562,7 +3562,7 @@ function genwallet(lang)
 	widgets.spendtxt.innerHTML = keys.spend.sec;
 	widgets.viewtxt.innerHTML = keys.view.sec;
 	widgets.addresstxt.innerHTML = keys.public_addr;
-	widgets.mnemonic.innerHTML = mnemonic;
+	//widgets.mnemonic.innerHTML = mnemonic;
 }
 </script>
 
