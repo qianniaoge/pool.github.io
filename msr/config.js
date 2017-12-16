@@ -1,6 +1,6 @@
 var api = "http://78.47.92.206:8117";
 
-var coinUnits = 100000000000;
+var coinUnits = 1000000000000;
 
 var poolHost = "78.47.92.206";
 
