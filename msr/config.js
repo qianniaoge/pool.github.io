@@ -2,16 +2,17 @@ var api = "http://78.47.92.206:8117";
 
 var coinUnits = 10000000000;
 
-var poolHost = "x";
-
-var irc = "irc.freenode.net/#monero-pools";
-
-var email = "support";
+var poolHost = "78.47.92.206";
 
 var cryptonatorWidget = ["XMR-BTC"];
 
-var easyminerDownload = "http/releases/";
+var irc = "";
 
-var blockchainExplorer = "/block/";
+var email = "";
 
-var transactionExplorer = "/transaction/";
+var easyminerDownload = "https://github.com/zone117x/cryptonote-easy-miner/releases/";
+
+var blockchainExplorer = "http://www.msrchain.net/block/";
+
+var transactionExplorer = "http://www.msrchain.net/tx/";
+
