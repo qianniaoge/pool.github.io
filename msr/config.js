@@ -8,7 +8,6 @@ var irc = "";
 
 var email = "";
 
-var minerDownload = "https://github.com/fireice-uk/xmr-stak/releases";
 
 var blockchainExplorer = "http://www.msrchain.net/block/{id}";
 
