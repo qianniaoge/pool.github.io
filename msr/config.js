@@ -14,4 +14,4 @@ var blockchainExplorer = "http://www.msrchain.net/block/{id}";
 
 var transactionExplorer = "http://www.msrchain.net/tx/{id}";
 
-var themeCss = "themes/default-theme.css";
+var themeCss = "themes/nightly-mining-dark-theme.css";
