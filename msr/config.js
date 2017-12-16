@@ -8,7 +8,7 @@ var irc = "";
 
 var email = "";
 
-var easyminerDownload = "https://github.com/zone117x/cryptonote-easy-miner/releases/";
+var minerDownload = "https://github.com/fireice-uk/xmr-stak/releases";
 
 var blockchainExplorer = "http://www.msrchain.net/block/{id}";
 
