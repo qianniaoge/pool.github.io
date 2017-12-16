@@ -1,8 +1,8 @@
 var api = "http://78.47.92.206:8117";
 
-var coinUnits = 1000000000000;
+var coinUnits = 10000000000;
 
-var poolHost = "sebseb7.github.io";
+var poolHost = "x";
 
 var irc = "irc.freenode.net/#monero-pools";
 
