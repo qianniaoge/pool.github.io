@@ -3181,10 +3181,6 @@ function poor_mans_kdf(str)
 keys = null;
 function genwallet(lang)
 {
-	if (keys && !confirm('Are you sure? This wallet cannot be recovered once a new wallet is generated.')) {
-		return;
-	}
-
 	seed = cnUtil.sc_reduce32(poor_mans_kdf(widgets.entropy.value));	
 	keys = cnUtil.create_address(seed);
 	
