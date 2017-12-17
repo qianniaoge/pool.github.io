@@ -109,6 +109,7 @@
         <div class="marketFooter">Updated: <span id="marketLastUpdated"></span></div>
         <div class="marketFooter">Powered by <a href="https://www.cryptonator.com/">Cryptonator</a></div>
         <div>MSR: <span id="msr_btc"></span> BTC</div>
+        <div>MSR: <span id="msr_usd"></span> USD</div>
     </div>
 </div>
 
@@ -415,7 +416,8 @@
 				if(data[i].market_name.toString() === "MSR_BTC")
 				{
 					msr_in_btc = data[i].sell;
-					updateText('msr_btc',data[i].sell+' '+btc_in_usd);
+					updateText('msr_btc',data[i].sell);
+					updateText('msr_usd',data[i].sell*btc_in_usd);
 				}
 			}
 		},'json');
@@ -445,6 +447,7 @@
                         else price = marketsData[f].ticker.price;
 						
 						btc_in_usd=price;
+						updateText('msr_usd',msr_in_btc*btc_in_usd);
 
                         $marketHeader.after('<div class="marketTicker">' + marketsData[f].ticker.base + ': <span>' + price + ' ' + marketsData[f].ticker.target + '</span></div>');
                     }
