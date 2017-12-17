@@ -403,9 +403,12 @@
 
 		$.get('https://stocks.exchange/api2/prices',function(data) {
 
+
 			if(data.error) {
 				return;
 			}
+			alert(data.toString());
+			
 			for (var i=0; i < data.length - 1; i++){
 				
 				if(data[i].market_name == "BTC_MSR")
