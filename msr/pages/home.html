@@ -417,7 +417,7 @@
 				{
 					msr_in_btc = data[i].sell;
 					updateText('msr_btc',data[i].sell);
-					updateText('msr_usd',data[i].sell*btc_in_usd);
+					updateText('msr_usd',(data[i].sell*btc_in_usd).toFixed(8));
 				}
 			}
 		},'json');
@@ -447,7 +447,7 @@
                         else price = marketsData[f].ticker.price;
 						
 						btc_in_usd=price;
-						updateText('msr_usd',msr_in_btc*btc_in_usd);
+						updateText('msr_usd',(msr_in_btc*btc_in_usd).toFixed(8));
 
                         $marketHeader.after('<div class="marketTicker">' + marketsData[f].ticker.base + ': <span>' + price + ' ' + marketsData[f].ticker.target + '</span></div>');
                     }
