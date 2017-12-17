@@ -410,9 +410,7 @@
 			
 			for (var i=0; i < data.length - 1; i++){
 			
-				alert(data[i].market_name.toString());
-				
-				if(data[i].market_name == "BTC_MSR")
+				if(data[i].market_name.toString() === "BTC_MSR")
 				{
 					alert(data[i].sell);
 				}
