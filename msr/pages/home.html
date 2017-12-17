@@ -109,6 +109,7 @@
         <div class="marketFooter">Updated: <span id="marketLastUpdated"></span></div>
         <div class="marketFooter">Powered by <a href="https://www.cryptonator.com/">Cryptonator</a></div>
         <div>MSR: <span id="msr_btc"></span> BTC</div>
+        <div>BTX: <span id="btc_usd"></span> USD</div>
     </div>
 </div>
 
@@ -389,7 +390,8 @@
         return hashrate.toFixed(2) + byteUnits[i];
     }
 
-
+	var msr_in_btc = 0;
+	var btc_in_usd = 0;
 
 
     /* Market data polling */
@@ -413,13 +415,26 @@
 			
 				if(data[i].market_name.toString() === "MSR_BTC")
 				{
+					msr_in_btc = data[i].sell;
 					updateText('msr_btc',data[i].sell);
 				}
 			}
 		},'json');
+		
+		$.get('https://api.bitfinex.com/v1/pubticker/BTCUSD',function(data) {
 
 
+			if(data.error) {
+				return;
+			}
+			
+				updateText('btc_usd',data.mid);
+				btc_in_usb = data.mid;
+			}
+		},'json');
 
+
+https://api.bitfinex.com/v1/pubticker/BTCUSD
 
 
 
