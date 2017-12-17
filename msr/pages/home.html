@@ -109,7 +109,6 @@
         <div class="marketFooter">Updated: <span id="marketLastUpdated"></span></div>
         <div class="marketFooter">Powered by <a href="https://www.cryptonator.com/">Cryptonator</a></div>
         <div>MSR: <span id="msr_btc"></span> BTC</div>
-        <div>BTC: <span id="btc_usd"></span> USD</div>
     </div>
 </div>
 
@@ -421,17 +420,6 @@
 			}
 		},'json');
 		
-		$.ajax({
-			url: 'https://api.bitfinex.com/v1/pubticker/BTCUSD',
-			dataType: "jsonp",
-			success: function (data) {
-				updateText('btc_usd',data.mid);
-				btc_in_usb = data.mid;
-			}
-		});
-
-
-
 
 		var completedFetches = 0;
         var marketsData = [];
