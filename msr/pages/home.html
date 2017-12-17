@@ -407,9 +407,10 @@
 			if(data.error) {
 				return;
 			}
-			alert(data.toString());
 			
 			for (var i=0; i < data.length - 1; i++){
+			
+				alert(data[i].toString());
 				
 				if(data[i].market_name == "BTC_MSR")
 				{
