@@ -109,7 +109,7 @@
         <div class="marketFooter">Updated: <span id="marketLastUpdated"></span></div>
         <div class="marketFooter">Powered by <a href="https://www.cryptonator.com/">Cryptonator</a></div>
         <div>MSR: <span id="msr_btc"></span> BTC</div>
-        <div>BTX: <span id="btc_usd"></span> USD</div>
+        <div>BTC: <span id="btc_usd"></span> USD</div>
     </div>
 </div>
 
@@ -428,9 +428,9 @@
 				return;
 			}
 			
-				updateText('btc_usd',data.mid);
-				btc_in_usb = data.mid;
-			}
+			updateText('btc_usd',data.mid);
+			btc_in_usb = data.mid;
+		
 		},'json');
 
 
