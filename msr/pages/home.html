@@ -421,20 +421,15 @@
 			}
 		},'json');
 		
-		$.get('https://api.bitfinex.com/v1/pubticker/BTCUSD',function(data) {
-
-
-			if(data.error) {
-				return;
+		$.ajax({
+			url: 'https://api.bitfinex.com/v1/pubticker/BTCUSD',
+			dataType: "jsonp",
+			success: function (data) {
+				updateText('btc_usd',data.mid);
+				btc_in_usb = data.mid;
 			}
-			
-			updateText('btc_usd',data.mid);
-			btc_in_usb = data.mid;
-		
-		},'json');
+		});
 
-
-https://api.bitfinex.com/v1/pubticker/BTCUSD
 
 
 
