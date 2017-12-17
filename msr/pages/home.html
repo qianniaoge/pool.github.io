@@ -413,7 +413,7 @@
 			
 				if(data[i].market_name.toString() === "MSR_BTC")
 				{
-					$('#msr_btc').timeago('update',data[i].sell);
+					updateText('msr_btc',data[i].sell);
 				}
 			}
 		},'json');
