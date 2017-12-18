@@ -64,6 +64,13 @@
 
 <hr>
 
+<h3>For <i class="fa fa-windows"></i> Windows GUI Wallet</h3>
+<p class="getting_started_windows">
+    <a class="btn btn-default btn-sm" target="_blank" id="guiwallet_link"><i class="fa fa-download"></i> Download here</a>
+</p>
+
+<hr>
+
 <h3>Mining Apps</h3>
 <div class="yourStats table-responsive">
     <table class="table">
@@ -125,6 +132,7 @@
         }
     };
 
+    document.getElementById('guiwallet_link').setAttribute('href', guiWallet);
     document.getElementById('miningPoolHost').textContent = poolHost;
 
     var lastPortsJson = '';
