@@ -2,7 +2,7 @@ var api = "http://78.47.92.206:8118";
 
 var poolHost = "78.47.92.206";
 
-var cryptonatorWidget = ["BTC-USD"];
+var cryptonatorWidget = ["BTC-USD","XUN-USD"];
 
 var irc = "";
 
