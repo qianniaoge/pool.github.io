@@ -141,7 +141,8 @@
 
     function updateText(elementId, text){
         var el = document.getElementById(elementId);
-        if (el.textContent !== text){
+        if(!el)alert(elementId);
+		if (el.textContent !== text){
             el.textContent = text;
         }
         return el;
@@ -340,10 +341,6 @@
                     <i class="fa fa-paper-plane-o"></i> Payments
                 </a></li>
                 
-				<li><a class="hot_link" data-page="../../msrgen.html" href="#walletgen">
-                    <i class="fa fa-book"></i> Wallet Generator
-                </a></li>
-
             </ul>
             <div id="stats_updated">Stats Updated &nbsp;<i class="fa fa-bolt"></i></div>
         </div>
