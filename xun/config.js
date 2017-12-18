@@ -14,4 +14,6 @@ var transactionExplorer = "http://explorer.ultranote.org/?hash={id}#blockchain_t
 
 var guiWallet = "https://ultranote.org/";
 
+var paperWallet = "https://paperwallet.ultranote.org/";
+
 var themeCss = "themes/nightly-mining-dark-theme.css";
