@@ -141,11 +141,15 @@
 
     function updateText(elementId, text){
         var el = document.getElementById(elementId);
-        if(!el)alert(elementId);
-		if (el.textContent !== text){
+        
+		if(!el){
+			console.log(elementId);
+		}
+		else if (el.textContent !== text){
             el.textContent = text;
         }
-        return el;
+ 
+ 		return el;
     }
 
 
