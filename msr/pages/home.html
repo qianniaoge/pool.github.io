@@ -306,7 +306,7 @@
 
     currentPage = {
         destroy: function(){
-            $('#networkLastBlockFound,#poolLastBlockFound,#yourLastShare).timeago('dispose');
+            $('#networkLastBlockFound,#poolLastBlockFound,#yourLastShare').timeago('dispose');
             if (xhrAddressPoll) xhrAddressPoll.abort();
             if (addressTimeout) clearTimeout(addressTimeout);
             clearInterval(intervalMarketPolling);
@@ -362,7 +362,7 @@
     };
 
 
-    $('#networkLastBlockFound,#poolLastBlockFound,#yourLastShare).timeago();
+    $('#networkLastBlockFound,#poolLastBlockFound,#yourLastShare').timeago();
 
     function getReadableTime(seconds){
 
