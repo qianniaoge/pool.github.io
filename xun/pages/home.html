@@ -111,8 +111,6 @@
         <h3 id="marketHeader">Market</h3>
         <div>XUN: <span id="xun_btc"></span> <span style="color: #01C2AB">BTC</span></div>
         <div>XUN: <span id="xun_usd"></span> <span style="color: #01C2AB">USD</span></div>
-        <div class="marketFooter">Updated: <span id="marketLastUpdated"></span></div>
-        <div class="marketFooter">Powered by <a href="https://www.cryptonator.com/">Cryptonator</a></div>
         <div class="marketFooter">Trade on <a target="_blank" href="https://stocks.exchange/trade/XUN/BTC">stocks.exchange</a></div>
     </div>
 </div>
@@ -308,7 +306,7 @@
 
     currentPage = {
         destroy: function(){
-            $('#networkLastBlockFound,#poolLastBlockFound,#yourLastShare,#marketLastUpdated').timeago('dispose');
+            $('#networkLastBlockFound,#poolLastBlockFound,#yourLastShare').timeago('dispose');
             if (xhrAddressPoll) xhrAddressPoll.abort();
             if (addressTimeout) clearTimeout(addressTimeout);
             clearInterval(intervalMarketPolling);
@@ -364,7 +362,7 @@
     };
 
 
-    $('#networkLastBlockFound,#poolLastBlockFound,#yourLastShare,#marketLastUpdated').timeago();
+    $('#networkLastBlockFound,#poolLastBlockFound,#yourLastShare').timeago();
 
     function getReadableTime(seconds){
 
@@ -456,7 +454,6 @@
 
                         $marketHeader.after('<div class="marketTicker">' + marketsData[f].ticker.base + ': <span>' + price + ' ' + marketsData[f].ticker.target + '</span></div>');
                     }
-                    $('#marketLastUpdated').timeago('update', new Date(marketsData[0].timestamp * 1000).toISOString());
                 }, 'json');
             })(i);
         }
