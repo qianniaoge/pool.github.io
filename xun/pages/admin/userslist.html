@@ -29,7 +29,7 @@
 
 				walletsArray.push({
 					number: wallet,
-					number_sh: wallet.substr(0, 13) + '...' + wallet.substr(wallet.length - 10);,
+					number_sh: wallet.substr(0, 13) + '...' + wallet.substr(wallet.length - 10),
 					wallet: userData,
 					timeago: $.timeago(new Date(userData.lastShare * 1000).toISOString()),
 					readablePending: getReadableCoins(userData.pending),
