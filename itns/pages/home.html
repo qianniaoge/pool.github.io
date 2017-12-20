@@ -109,9 +109,9 @@
 
     <div class="col-md-4 stats marketRate">
         <h3 id="marketHeader">Market</h3>
-        <div>XUN: <span id="xun_btc"></span> <span style="color: #01C2AB">BTC</span></div>
-        <div>XUN: <span id="xun_usd"></span> <span style="color: #01C2AB">USD</span></div>
-        <div class="marketFooter">Trade on <a target="_blank" href="https://stocks.exchange/trade/XUN/BTC">stocks.exchange</a></div>
+        <div>ITNS: <span id="itns_btc"></span> <span style="color: #01C2AB">BTC</span></div>
+        <div>ITNS: <span id="itns_usd"></span> <span style="color: #01C2AB">USD</span></div>
+        <div class="marketFooter">Trade on <a target="_blank" href="https://stocks.exchange/trade/ITNS/BTC">stocks.exchange</a></div>
     </div>
 </div>
 
@@ -393,7 +393,7 @@
         return hashrate.toFixed(2) + byteUnits[i];
     }
 
-	var xun_in_btc = 0;
+	var itns_in_btc = 0;
 	var btc_in_usd = 0;
 
 
@@ -416,11 +416,11 @@
 			
 			for (var i=0; i < data.length - 1; i++){
 			
-				if(data[i].market_name.toString() === "XUN_BTC")
+				if(data[i].market_name.toString() === "ITNS_BTC")
 				{
-					xun_in_btc = data[i].sell;
-					updateText('xun_btc',data[i].sell);
-					updateText('xun_usd',(data[i].sell*btc_in_usd).toFixed(8));
+					itns_in_btc = data[i].sell;
+					updateText('itns_btc',data[i].sell);
+					updateText('itns_usd',(data[i].sell*btc_in_usd).toFixed(8));
 				}
 			}
 		},'json');
@@ -450,7 +450,7 @@
                         else price = marketsData[f].ticker.price;
 						
 						btc_in_usd=price;
-						updateText('xun_usd',(xun_in_btc*btc_in_usd).toFixed(8));
+						updateText('itns_usd',(itns_in_btc*btc_in_usd).toFixed(8));
 
                         $marketHeader.after('<div class="marketTicker">' + marketsData[f].ticker.base + ': <span>' + price + ' ' + marketsData[f].ticker.target + '</span></div>');
                     }
@@ -480,7 +480,7 @@
             var profit = (hashRate * 86400 / lastStats.network.difficulty) * lastStats.network.reward;
             if (profit) {
                 updateText('calcHashAmount', getReadableCoins(profit, 2, true));
-                updateText('calcHashAmount2', (getReadableCoins(profit, 3, true)*xun_in_btc*btc_in_usd).toFixed(2));
+                updateText('calcHashAmount2', (getReadableCoins(profit, 3, true)*itns_in_btc*btc_in_usd).toFixed(2));
                 return;
             }
         }

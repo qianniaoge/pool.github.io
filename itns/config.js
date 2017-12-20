@@ -12,7 +12,7 @@ var blockchainExplorer = "http://intensecoin.com/explorer/#blockchain_block?hash
 
 var transactionExplorer = "http://intensecoin.com/explorer/#blockchain_transaction?hash={id}";
 
-var guiWallet = "";
+var guiWallet = "https://intensecoin.com/#download";
 
 var paperWallet = "";
 
