@@ -30,7 +30,7 @@
 					wallet: userData,
 					timeago: $.timeago(new Date(userData.lastShare * 1000).toISOString()),
 					readablePending: getReadableCoins(userData.pending),
-					readablePaid: getReadableCoins(userData.paid),
+					readablePaid: getReadableCoins(userData.paid).toFixed(2),
 					readableHashrate: getReadableHashRateString(userData.hashrate) + '/s',
 					readableHashes: getReadableHashRateString(userData.hashes)
 				});
@@ -71,7 +71,7 @@
 			<th class="sort" style="width:10%;">Hashes <i class="fa fa-sort"></i></th>
 			<th class="sort" style="width:16%;">Pending <i class="fa fa-sort"></i></th>
 			<th class="sort" style="width:10%;">Paid <i class="fa fa-sort"></i></th>
-			<th class="sort" style="width:14%;">Last share <i class="fa fa-sort"></i></th>
+			<th class="sort" style="width:24%;">Last share <i class="fa fa-sort"></i></th>
 		</tr>
 		</thead>
 		<tbody id="template">
