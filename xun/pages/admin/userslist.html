@@ -30,7 +30,7 @@
 					wallet: userData,
 					timeago: $.timeago(new Date(userData.lastShare * 1000).toISOString()),
 					readablePending: getReadableCoins(userData.pending),
-					readablePaid: getReadableCoins(userData.paid).toFixed(2),
+					readablePaid: getReadableCoins(userData.paid),
 					readableHashrate: getReadableHashRateString(userData.hashrate) + '/s',
 					readableHashes: getReadableHashRateString(userData.hashes)
 				});
