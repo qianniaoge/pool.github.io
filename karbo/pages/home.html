@@ -421,11 +421,11 @@
 				return;
 			}
 		
-			alert(JSON.stringify(data.data));
+			alert(JSON.stringify(data.Data));
 
-			krb_in_btc = data.data.LastPrice;
-			updateText('krb_btc',data.data.LastPrice);
-			updateText('krb_usd',(data.data.LastPrice*btc_in_usd).toFixed(8));
+			krb_in_btc = data.Data.LastPrice;
+			updateText('krb_btc',data.Data.LastPrice);
+			updateText('krb_usd',(data.Data.LastPrice*btc_in_usd).toFixed(8));
 		
 		},'json');
 		
