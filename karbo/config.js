@@ -8,13 +8,12 @@ var irc = "";
 
 var email = "";
 
-var blockchainExplorer = "";
+var blockchainExplorer = "http://chainradar.com/{symbol}/block/{id}";
+var transactionExplorer = "http://chainradar.com/{symbol}/transaction/{id}";
 
-var transactionExplorer = "";
+var guiWallet = "http://karbowanec.com/download/";
 
-var guiWallet = "";
-
-var paperWallet = "";
+var paperWallet = "http://paperwallet.karbowanec.com/en/";
 
 var themeCss = "themes/nightly-mining-dark-theme.css";
 
