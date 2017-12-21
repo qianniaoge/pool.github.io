@@ -413,22 +413,18 @@
 
 
 
-		$.get('https://stocks.exchange/api2/prices',function(data) {
+		//$.get('https://stocks.exchange/api2/prices',function(data) {
+		$.get('https://www.cryptopia.co.nz/api/GetMarket/KRB_BTC',function(data) {
 
 
 			if(data.error) {
 				return;
 			}
 			
-			for (var i=0; i < data.length - 1; i++){
-			
-				if(data[i].market_name.toString() === "KRB_BTC")
-				{
-					krb_in_btc = data[i].sell;
-					updateText('krb_btc',data[i].sell);
-					updateText('krb_usd',(data[i].sell*btc_in_usd).toFixed(8));
-				}
-			}
+			krb_in_btc = data.LastPrice;
+			updateText('krb_btc',data.LastPrice);
+			updateText('krb_usd',(data.LastPrice*btc_in_usd).toFixed(8));
+		
 		},'json');
 		
 
