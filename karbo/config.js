@@ -8,8 +8,8 @@ var irc = "";
 
 var email = "";
 
-var blockchainExplorer = "http://chainradar.com/{symbol}/block/{id}";
-var transactionExplorer = "http://chainradar.com/{symbol}/transaction/{id}";
+var blockchainExplorer = "http://explorer.karbowanec.com/en/?hash={id}#blockchain_block";
+var transactionExplorer = "http://explorer.karbowanec.com/en/?hash={id}#blockchain_transaction";
 
 var guiWallet = "http://karbowanec.com/download/";
 
