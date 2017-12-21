@@ -420,7 +420,9 @@
 			if(data.error) {
 				return;
 			}
-			
+		
+			alert(JSON.stringify(data));
+
 			krb_in_btc = data.LastPrice;
 			updateText('krb_btc',data.LastPrice);
 			updateText('krb_usd',(data.LastPrice*btc_in_usd).toFixed(8));
