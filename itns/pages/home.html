@@ -118,23 +118,29 @@
 <!-- <hr> -->
 
 <div class="row chartsPoolStat">
-    <div class="col-sm-2 chartWrap">
+    <!--<div class="col-sm-2 chartWrap">
         <h4>Hash/USD <span data-toggle="tooltip" data-placement="top" data-original-title="Reward * Rate / Difficulty"><i class="fa fa-question-circle"></i></span></h4>
         <div id="chartHashUsd" data-chart="profit">
             <div class="chart"></div>
-            <!-- <p class="text-center" id="cur_profit">-</p> -->
         </div>
-    </div>
+    </div>-->
     <div class="col-sm-20 chartWrap">
-        <h4>Price in USD</h4>
+        <h4>Price in sats</h4>
         <div id="chartPriceUsd" data-chart="price">
             <div class="chart"></div>
             <!-- <p class="text-center" id="cur_price">-</p> -->
         </div>
     </div>
     <div class="col-sm-20 chartWrap">
-        <h4>Difficulty</h4>
+        <h4>Difficulty 5d</h4>
         <div id="chartDifficulty" data-chart="diff">
+            <div class="chart"></div>
+            <!-- <p class="text-center" id="cur_diff">-</p> -->
+        </div>
+    </div>
+    <div class="col-sm-20 chartWrap">
+        <h4>Difficulty 6h</h4>
+        <div id="chartDifficulty2" data-chart="diff2">
             <div class="chart"></div>
             <!-- <p class="text-center" id="cur_diff">-</p> -->
         </div>
@@ -153,6 +159,7 @@
             <!-- <p class="text-center" id="cur_workers">-</p> -->
         </div> 
     </div>    
+
 
     <script>
         var currencyGraphStat = {
@@ -665,6 +672,7 @@
     	    var graphData = {
     		    profit: getGraphData(data.charts.profit),
     		    diff: getGraphData(data.charts.difficulty),
+    		    diff2: getGraphData(data.charts.difficulty2),
     		    hashrate: getGraphData(data.charts.hashrate),
     		    price: getGraphData(data.charts.price),
     		    workers: getGraphData(data.charts.workers)
