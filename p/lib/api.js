@@ -51,6 +51,7 @@ function collectStats(){
             redisClient.multi(redisCommands).exec(function(error, replies){
 
                 redisFinished = Date.now();
+                var dateNowSeconds = Date.now() / 1000 | 0;
 
                 if (error){
                     log('error', logSystem, 'Error getting redis data %j', [error]);
@@ -94,7 +95,12 @@ function collectStats(){
 
                 if (replies[5]){
                     for (var miner in replies[5]){
-                        data.roundHashes += parseInt(replies[5][miner]);
+                        if (config.poolServer.slushMining.enabled) {
+                            data.roundHashes +=  parseInt(replies[5][miner]) / Math.pow(Math.E, ((data.lastBlockFound - dateNowSeconds) / config.poolServer.slushMining.weight)); //TODO: Abstract: If something different than lastBlockfound is used for scoreTime, this needs change. 
+                        }
+                        else {
+                            data.roundHashes +=  parseInt(replies[5][miner]);
+                        }
                     }
                 }
 
@@ -136,7 +142,10 @@ function collectStats(){
                 donation: donations,
                 version: version,
                 minPaymentThreshold: config.payments.minPayment,
-                denominationUnit: config.payments.denomination
+                denominationUnit: config.payments.denomination,
+                blockTime: config.coinDifficultyTarget,
+                slushMiningEnabled: config.poolServer.slushMining.enabled,
+                weight: config.poolServer.slushMining.weight
             });
         },
         charts: charts.getPoolChartsData
@@ -170,8 +179,8 @@ function getPublicPorts(ports){
 function getReadableHashRateString(hashrate){
     var i = 0;
     var byteUnits = [' H', ' KH', ' MH', ' GH', ' TH', ' PH' ];
-    while (hashrate > 1024){
-        hashrate = hashrate / 1024;
+    while (hashrate > 1000){
+        hashrate = hashrate / 1000;
         i++;
     }
     return hashrate.toFixed(2) + byteUnits[i];
@@ -674,8 +683,7 @@ var server = http.createServer(function(request, response){
             break;
 
         case '/miners_hashrate':
-            
-			if ((response.socket.remoteAddress !== '::ffff:127.0.0.1') && !authorize(request, response))
+            if ((response.socket.remoteAddress !== '::ffff:127.0.0.1') && !authorize(request, response))
                 return;
             handleGetMinersHashrate(response);
             break;
