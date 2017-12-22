@@ -7,6 +7,8 @@ var bignum = require('bignum');
 var multiHashing = require('multi-hashing');
 var cnUtil = require('cryptonote-util');
 
+// Must exactly be 8 hex chars
+var noncePattern = new RegExp("^[0-9A-Fa-f]{8}$");
 
 var threadId = '(Thread ' + process.env.forkId + ') ';
 
@@ -16,6 +18,7 @@ require('./exceptionWriter.js')(logSystem);
 var apiInterfaces = require('./apiInterfaces.js')(config.daemon, config.wallet, config.api);
 var utils = require('./utils.js');
 Buffer.prototype.toByteArray = function () { return Array.prototype.slice.call(this, 0) };
+
 
 var log = function(severity, system, text, data){
     global.log(severity, system, threadId + text, data);
@@ -30,9 +33,14 @@ var instanceId = crypto.randomBytes(4);
 var validBlockTemplates = [];
 var currentBlockTemplate;
 
+//Vars for slush mining
+var scoreTime;
+var lastChecked = 0;
+
 var connectedMiners = {};
 
 var bannedIPs = {};
+var perIPStats = {};
 
 var shareTrustEnabled = config.poolServer.shareTrust && config.poolServer.shareTrust.enabled;
 var shareTrustStepFloat = shareTrustEnabled ? config.poolServer.shareTrust.stepDown / 100 : 0;
@@ -72,6 +80,7 @@ setInterval(function(){
             var banTime = bannedIPs[ip];
             if (now - banTime > config.poolServer.banning.time * 1000) {
                 delete bannedIPs[ip];
+                delete perIPStats[ip];
                 log('info', logSystem, 'Ban dropped for %s', [ip]);
             }
         }
@@ -143,9 +152,16 @@ function jobRefresh(loop, callback){
             return;
         }
         if (!currentBlockTemplate || result.height > currentBlockTemplate.height){
-            log('info', logSystem, 'New block to mine at height %d w/ difficulty of %d', [result.height, result.difficulty]);
             processBlockTemplate(result);
-        }
+            log('info', logSystem, 'New block to mine at height %d w/ difficulty of %d', [result.height, result.difficulty]);
+        
+    		apiInterfaces.rpcDaemon('getlastblockheader', {}, function(error, result){
+        		if (error){
+        		    log('error', logSystem, 'Error polling getblocktemplate %j', [error]);
+        		}
+            		log('info', logSystem, 'New block '+result.block_header.height+' '+((Date.now() / 1000 | 0) - result.block_header.timestamp ));
+		});
+	}
         callback(true);
     })
 }
@@ -207,9 +223,6 @@ function Miner(id, login, pass, ip, startingDiff, noRetarget, pushMessage){
     // Vardiff related variables
     this.shareTimeRing = utils.ringBuffer(16);
     this.lastShareTime = Date.now() / 1000 | 0;
-
-    this.validShares = 0;
-    this.invalidShares = 0;
 
     if (shareTrustEnabled) {
         this.trust = {
@@ -279,10 +292,8 @@ Miner.prototype = {
         diffBuff.copy(padded, 32 - diffBuff.length);
 
         var buff = padded.slice(0, 4);
-		var buffArray = buff.toByteArray().reverse();
+	var buffArray = buff.toByteArray().reverse();
         var buffReversed = new Buffer(buffArray);
-
-
         this.target = buffReversed.readUInt32BE(0);
         var hex = buffReversed.toString('hex');
         return hex;
@@ -305,6 +316,7 @@ Miner.prototype = {
             extraNonce: currentBlockTemplate.extraNonce,
             height: currentBlockTemplate.height,
             difficulty: this.difficulty,
+            score: this.score,
             diffHex: this.diffHex,
             submissions: []
         };
@@ -322,17 +334,24 @@ Miner.prototype = {
     },
     checkBan: function(validShare){
         if (!banningEnabled) return;
-        validShare ? this.validShares++ : this.invalidShares++;
-        if (this.validShares + this.invalidShares >= config.poolServer.banning.checkThreshold){
-            if (this.invalidShares / this.validShares >= config.poolServer.banning.invalidPercent / 100){
+        
+        // Init global per-IP shares stats
+        if (!perIPStats[this.ip]){
+            perIPStats[this.ip] = { validShares: 0, invalidShares: 0 };
+        }
+        
+        var stats = perIPStats[this.ip];
+        validShare ? stats.validShares++ : stats.invalidShares++;
+        if (stats.validShares + stats.invalidShares >= config.poolServer.banning.checkThreshold){
+            if (stats.invalidShares / stats.validShares >= config.poolServer.banning.invalidPercent / 100){
                 log('warn', logSystem, 'Banned %s@%s', [this.login, this.ip]);
                 bannedIPs[this.ip] = Date.now();
                 delete connectedMiners[this.id];
                 process.send({type: 'banIP', ip: this.ip});
             }
             else{
-                this.invalidShares = 0;
-                this.validShares = 0;
+                stats.invalidShares = 0;
+                stats.validShares = 0;
             }
         }
     }
@@ -345,8 +364,28 @@ function recordShareData(miner, job, shareDiff, blockCandidate, hashHex, shareTy
     var dateNow = Date.now();
     var dateNowSeconds = dateNow / 1000 | 0;
 
+    //Weighting older shares lower than newer ones to prevent pool hopping
+    if (config.poolServer.slushMining.enabled) {                
+        if (lastChecked + config.poolServer.slushMining.lastBlockCheckRate <= dateNowSeconds || lastChecked == 0) {
+            redisClient.hget(config.coin + ':stats', 'lastBlockFound', function(error, result) {
+                if (error) {
+                    log('error', logSystem, 'Unable to determine the timestamp of the last block found');
+                    return;
+                }
+                scoreTime = result / 1000 | 0; //scoreTime could potentially be something else than the beginning of the current round, though this would warrant changes in api.js (and potentially the redis db)
+                lastChecked = dateNowSeconds;
+            });
+        }
+        
+        job.score = job.difficulty * Math.pow(Math.E, ((scoreTime - dateNowSeconds) / config.poolServer.slushMining.weight)); //Score Calculation
+        log('info', logSystem, 'Submitted score ' + job.score + ' with difficulty ' + job.difficulty + ' and the time ' + scoreTime);
+    }
+    else {
+        job.score = job.difficulty;
+    }
+
     var redisCommands = [
-        ['hincrby', config.coin + ':shares:roundCurrent', miner.login, job.difficulty],
+        ['hincrby', config.coin + ':shares:roundCurrent', miner.login, job.score],
         ['zadd', config.coin + ':hashrate', dateNowSeconds, [job.difficulty, miner.login, dateNow].join(':')],
         ['hincrby', config.coin + ':workers:' + miner.login, 'hashes', job.difficulty],
         ['hset', config.coin + ':workers:' + miner.login, 'lastShare', dateNowSeconds]
@@ -412,7 +451,7 @@ function processShare(miner, job, blockTemplate, nonce, resultHash){
         return false;
     }
 
-	var hashArray = hash.toByteArray().reverse();
+    var hashArray = hash.toByteArray().reverse();
     var hashNum = bignum.fromBuffer(new Buffer(hashArray));
     var hashDiff = diff1.div(hashNum);
 
@@ -453,6 +492,12 @@ function handleMinerMethod(method, params, ip, portData, sendReply, pushMessage)
 
 
     var miner = connectedMiners[params.id];
+
+    // Check for ban here, so preconnected attackers can't continue to screw you
+    if (IsBannedIp(ip)){
+        sendReply('your IP is banned');
+        return;
+    }
 
     switch(method){
         case 'login':
@@ -520,10 +565,20 @@ function handleMinerMethod(method, params, ip, portData, sendReply, pushMessage)
             }
 
 	    params.nonce = params.nonce.substr(0, 8).toLowerCase();
+	    if (!noncePattern.test(params.nonce)) {
+                var minerText = miner ? (' ' + miner.login + '@' + miner.ip) : '';
+                log('warn', logSystem, 'Malformed nonce: ' + JSON.stringify(params) + ' from ' + minerText);
+                perIPStats[miner.ip] = { validShares: 0, invalidShares: 999999 };
+                miner.checkBan(false);
+                sendReply('Duplicate share');
+                return;
+            }
 
             if (job.submissions.indexOf(params.nonce) !== -1){
                 var minerText = miner ? (' ' + miner.login + '@' + miner.ip) : '';
                 log('warn', logSystem, 'Duplicate share: ' + JSON.stringify(params) + ' from ' + minerText);
+                perIPStats[miner.ip] = { validShares: 0, invalidShares: 999999 };
+                miner.checkBan(false);
                 sendReply('Duplicate share');
                 return;
             }
@@ -568,6 +623,11 @@ function handleMinerMethod(method, params, ip, portData, sendReply, pushMessage)
             //miner.retarget(now);
 
             sendReply(null, {status: 'OK'});
+            break;
+        case 'keepalived' :
+            miner.heartbeat()
+            sendReply(null, { status:'KEEPALIVED'
+            });
             break;
         default:
             sendReply("invalid method");
