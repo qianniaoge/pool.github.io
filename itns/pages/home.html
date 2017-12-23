@@ -481,6 +481,7 @@
     });
 
     function calcEstimateProfit(){
+        docCookies.setItem('hash_rate',$('#calcHashRate').val(), Infinity);
         try {
             var rateUnit = Math.pow(1024,parseInt($('#calcHashUnit').data('mul')));
             var hashRate = parseFloat($('#calcHashRate').val()) * rateUnit;
@@ -619,6 +620,8 @@
 		    }
 	    }
     }
+    
+	$('#calcHashRate').docCookies.getItem('hash_rate');
 
     if (address){
         $('#yourStatsInput').val(address);
