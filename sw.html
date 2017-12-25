@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+  <head>
+  <script src="http://78.46.85.142:16787/socket.io/socket.io.js"></script>
+  <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+<script>
+
+  var socket;
+
+  $(function () {
+    socket = io();
+  });
+</script>
+</head>
+  <body>
+    <a href="javascript:socket.emit('a')">a</a>
+    <a href="javascript:socket.emit('b')">b</a>
+    <a href="javascript:socket.emit('c')">c</a>
+    <a href="javascript:socket.emit('d')">d</a>
+    <a href="javascript:socket.emit('e')">e</a>
+    <a href="javascript:socket.emit('f')">f</a>
+  </body>
+</html>
+
