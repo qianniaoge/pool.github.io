@@ -3,9 +3,9 @@
 /* Insert your pool's unique css here */
 
 @keyframes textColorChange {
-    0% {color: #00ffdd;}
-    50% {color: #00ddff;}
-    100% {color: #00ffdd;}
+    0% {color: #55ff99;}
+    50% {color: #5599ff;}
+    100% {color: #55ff99;}
 }
 
 .pulsar {
