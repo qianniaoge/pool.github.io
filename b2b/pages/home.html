@@ -410,6 +410,24 @@
     function updateMarkets(){
 
 		//$.get('https://stocks.exchange/api2/prices',function(data) {
+		
+		$.get('https://stocks.exchange/api2/prices',function(data) {
+
+
+			if(data.error) {
+				return;
+			}
+			
+			for (var i=0; i < data.length - 1; i++){
+			
+				if(data[i].market_name.toString() === "BBC_BTC")
+				{
+					itns_in_btc = data[i].sell;
+					updateText('b2b_btc',data[i].sell);
+					updateText('b2b_usd',(data[i].sell*btc_in_usd).toFixed(8));
+				}
+			}
+		},'json');
 
 		var completedFetches = 0;
         var marketsData = [];
