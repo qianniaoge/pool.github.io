@@ -1,6 +1,6 @@
 var api = "http://78.46.85.142:2699";
 
-var poolHost = "78.46.85.14278.46.85.142";
+var poolHost = "78.46.85.142";
 
 var cryptonatorWidget = ["BTC-USD"];
 
