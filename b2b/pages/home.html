@@ -109,9 +109,8 @@
 
     <div class="col-md-4 stats marketRate">
         <h3 id="marketHeader">Market</h3>
-        <div>KRB: <span id="krb_btc"></span> <span style="color: #01C2AB">BTC</span></div>
-        <div>KRB: <span id="krb_usd"></span> <span style="color: #01C2AB">USD</span></div>
-        <div class="marketFooter">Trade on <a target="_blank" href="https://www.cryptopia.co.nz/Exchange?market=KRB_BTC">Cryptopia</a></div>
+        <div>B2B: <span id="b2b_btc"></span> <span style="color: #01C2AB">BTC</span></div>
+        <div>B2B: <span id="b2b_usd"></span> <span style="color: #01C2AB">USD</span></div>
     </div>
 </div>
 
@@ -399,8 +398,8 @@
         return hashrate.toFixed(2) + byteUnits[i];
     }
 
-	var krb_in_btc = 0;
-	var btc_in_usd = 0;
+	var b2b_in_btc = 0;
+	var b2b_in_usd = 0;
 
 
     /* Market data polling */
@@ -411,17 +410,6 @@
     function updateMarkets(){
 
 		//$.get('https://stocks.exchange/api2/prices',function(data) {
-		$.get('https://www.cryptopia.co.nz/api/GetMarket/KRB_BTC',function(data) {
-
-			if(data.error) {
-				return;
-			}
-		
-			krb_in_btc = data.Data.LastPrice;
-			updateText('krb_btc',data.Data.LastPrice);
-			updateText('krb_usd',(data.Data.LastPrice*btc_in_usd).toFixed(8));
-		
-		},'json');
 
 		var completedFetches = 0;
         var marketsData = [];
@@ -447,7 +435,7 @@
                         else price = marketsData[f].ticker.price;
 						
 						btc_in_usd=price;
-						updateText('krb_usd',(krb_in_btc*btc_in_usd).toFixed(8));
+						updateText('b2b_usd',(b2b_in_btc*btc_in_usd).toFixed(8));
 
                         $marketHeader.after('<div class="marketTicker">' + marketsData[f].ticker.base + ': <span>' + price + ' ' + marketsData[f].ticker.target + '</span></div>');
                     }
@@ -477,7 +465,7 @@
             var profit = (hashRate * 86400 / lastStats.network.difficulty) * lastStats.network.reward;
             if (profit) {
                 updateText('calcHashAmount', getReadableCoins(profit, 2, true));
-                updateText('calcHashAmount2', (getReadableCoins(profit, 3, true)*krb_in_btc*btc_in_usd).toFixed(2));
+                updateText('calcHashAmount2', (getReadableCoins(profit, 3, true)*b2b_in_btc*btc_in_usd).toFixed(2));
                 return;
             }
         }
