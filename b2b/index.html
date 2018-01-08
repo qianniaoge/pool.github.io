@@ -17,7 +17,6 @@
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 
     <link href="//fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet" type="text/css">
-	<link href="/misc/video-js.css" rel="stylesheet"/>
 
     <script src="config.js"></script>
     <script src="custom.js"></script>
@@ -315,19 +314,6 @@
 
 
 </script>
-    <video id="bg-video"
-             class="video-js vjs-default-skin"
-             style="position:fixed;top:0;left:0;overflow:hidden;z-index:-998;"
-             height="100%"
-             width="100%"
-             loop>
-
-      <p></p>
-      <source src="/misc/loop.mp4" type="video/mp4">
-      <source src="/misc/loop.webm" type="video/webm">
-    </video>
-  <script src="/misc/video.js"></script>
-  <script src="/misc/videojs-background.js"></script>
 
 <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <div class="container">
@@ -387,11 +373,6 @@
 		<i class="fa fa-circle" style="color:black;font-size:50%;padding:6px;"></i> <a href="/">seb</a>
     </div>
 </footer>
-
-<script>
-    // fire up the plugin
-    videojs('bg-video').Background();
-  </script>
 
 </body>
 </html>
