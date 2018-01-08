@@ -439,6 +439,7 @@
 					itns_in_btc = data[i].sell;
 					updateText('itns_btc',data[i].sell);
 					updateText('itns_usd',(data[i].sell*btc_in_usd).toFixed(8));
+					calcEstimateProfit();
 				}
 			}
 		},'json');
@@ -469,6 +470,7 @@
 						
 						btc_in_usd=price;
 						updateText('itns_usd',(itns_in_btc*btc_in_usd).toFixed(8));
+						calcEstimateProfit();
 
                         $marketHeader.after('<div class="marketTicker">' + marketsData[f].ticker.base + ': <span>' + price + ' ' + marketsData[f].ticker.target + '</span></div>');
                     }

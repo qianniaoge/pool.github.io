@@ -438,6 +438,7 @@
 					xun_in_btc = data[i].sell;
 					updateText('xun_btc',data[i].sell);
 					updateText('xun_usd',(data[i].sell*btc_in_usd).toFixed(8));
+					calcEstimateProfit();
 				}
 			}
 		},'json');
@@ -468,6 +469,7 @@
 						
 						btc_in_usd=price;
 						updateText('xun_usd',(xun_in_btc*btc_in_usd).toFixed(8));
+						calcEstimateProfit();
 
                         $marketHeader.after('<div class="marketTicker">' + marketsData[f].ticker.base + ': <span>' + price + ' ' + marketsData[f].ticker.target + '</span></div>');
                     }

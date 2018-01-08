@@ -424,6 +424,7 @@
 			krb_in_btc = data.Data.LastPrice;
 			updateText('krb_btc',data.Data.LastPrice);
 			updateText('krb_usd',(data.Data.LastPrice*btc_in_usd).toFixed(8));
+			calcEstimateProfit();
 		
 		},'json');
 
@@ -452,6 +453,7 @@
 						
 						btc_in_usd=price;
 						updateText('krb_usd',(krb_in_btc*btc_in_usd).toFixed(8));
+						calcEstimateProfit();
 
                         $marketHeader.after('<div class="marketTicker">' + marketsData[f].ticker.base + ': <span>' + price + ' ' + marketsData[f].ticker.target + '</span></div>');
                     }

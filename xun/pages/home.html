@@ -442,6 +442,7 @@
 						
 						btc_in_usd=price;
 						updateText('xun_usd',(xun_in_btc*btc_in_usd).toFixed(8));
+						calcEstimateProfit();
 
                         $marketHeader.after('<div class="marketTicker">' + marketsData[f].ticker.base + ': <span>' + price + ' ' + marketsData[f].ticker.target + '</span></div>');
                     }

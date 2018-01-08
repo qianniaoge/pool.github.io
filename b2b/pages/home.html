@@ -430,6 +430,7 @@
 					b2b_in_btc = data[i].sell;
 					updateText('b2b_btc',data[i].sell);
 					updateText('b2b_usd',(data[i].sell*btc_in_usd).toFixed(8));
+					calcEstimateProfit();
 				}
 			}
 		},'json');
@@ -459,6 +460,7 @@
 						
 						btc_in_usd=price;
 						updateText('b2b_usd',(b2b_in_btc*btc_in_usd).toFixed(8));
+						calcEstimateProfit();
 
                         $marketHeader.after('<div class="marketTicker">' + marketsData[f].ticker.base + ': <span>' + price + ' ' + marketsData[f].ticker.target + '</span></div>');
                     }
