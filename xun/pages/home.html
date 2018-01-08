@@ -322,6 +322,8 @@
             if (xhrGetPayments) xhrGetPayments.abort();
         },
         update: function(){
+			
+			createCharts(lastStats);
 
             $('#networkLastBlockFound').timeago('update', new Date(lastStats.network.timestamp * 1000).toISOString());
 

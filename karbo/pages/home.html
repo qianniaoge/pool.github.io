@@ -324,7 +324,9 @@
         },
         update: function(){
 
-            $('#networkLastBlockFound').timeago('update', new Date(lastStats.network.timestamp * 1000).toISOString());
+			createCharts(lastStats);
+            
+			$('#networkLastBlockFound').timeago('update', new Date(lastStats.network.timestamp * 1000).toISOString());
 
             updateText('networkHashrate', getReadableHashRateString(lastStats.network.difficulty / lastStats.config.coinDifficultyTarget) + '/sec');
             updateText('networkDifficulty', lastStats.network.difficulty.toString());
