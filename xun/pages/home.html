@@ -110,7 +110,9 @@
 
     <div class="col-md-4 stats marketRate">
         <h3 id="marketHeader">Market</h3>
-        <div class="marketFooter">No longer traded</div>
+        <div>XUN: <span id="xun_btc"></span> <span style="color: #01C2AB">BTC</span></div>
+        <div>XUN: <span id="xun_usd"></span> <span style="color: #01C2AB">USD</span></div>
+        <div class="marketFooter">Trade on <a target="_blank" href="https://stocks.exchange/trade/XUN/BTC">stocks.exchange</a></div>
     </div>
 </div>
 
@@ -124,7 +126,7 @@
         </div>
     </div>-->
     <div class="col-sm-20 chartWrap">
-        <h4>Price in sats</h4>
+        <h4>Price in sats 5d</h4>
         <div id="chartPriceUsd" data-chart="price">
             <div class="chart"></div>
             <!-- <p class="text-center" id="cur_price">-</p> -->
@@ -145,14 +147,21 @@
         </div>
     </div>
     <div class="col-sm-20 chartWrap">
-        <h4>Hashrate</h4>
+        <h4>Difficulty 2h</h4>
+        <div id="chartDifficulty3" data-chart="diff3">
+            <div class="chart"></div>
+            <!-- <p class="text-center" id="cur_diff">-</p> -->
+        </div>
+    </div>
+    <div class="col-sm-20 chartWrap">
+        <h4>Hashrate 5d</h4>
         <div id="chartHashrate" data-chart="hashrate">
             <div class="chart"></div>
             <!-- <p class="text-center" id="cur_hashrate">-</p> -->
         </div>        
     </div>
     <div class="col-sm-20 chartWrap">        
-        <h4>Workers</h4>
+        <h4>Workers 5d</h4>
         <div id="chartWorkers" data-chart="workers">
             <div class="chart"></div>
             <!-- <p class="text-center" id="cur_workers">-</p> -->
@@ -217,8 +226,6 @@
 </div>
 
 <!-- <hr> -->
-<h3>To protect you from wasting your hashrate the mining ports are closed as long as Ultranote network issues persist. This is not a pool issue, this is an issue in the Ultranote network.</h3>
-
 
 <div id="miningProfitCalc">
     <h3>Estimate Mining Profits</h3>
@@ -237,6 +244,7 @@
             </div>
             <span class="input-group-addon">=</span>
             <span class="input-group-addon" id="calcHashResultsHolder"><span id="calcHashAmount"></span> <span id="calcHashSymbol"></span>/day</span>
+            <span class="input-group-addon" id="calcHashResultsHolder"><span id="calcHashAmount2"></span> USD/day</span>
         </div>
     </div>
 </div>
@@ -266,7 +274,7 @@
         </div>
         <div class="col-sm-4">            
             <div class="userChart" data-chart="user_hashrate">
-                <h4>Hash Rate</h4>
+                <h4>Hash Rate 6h</h4>
                 <div class="chart">
                     
                 </div>                
@@ -322,7 +330,7 @@
             if (xhrGetPayments) xhrGetPayments.abort();
         },
         update: function(){
-			
+            
 			createCharts(lastStats);
 
             $('#networkLastBlockFound').timeago('update', new Date(lastStats.network.timestamp * 1000).toISOString());
@@ -415,6 +423,25 @@
 
 
 
+
+		$.get('https://stocks.exchange/api2/prices',function(data) {
+
+
+			if(data.error) {
+				return;
+			}
+			
+			for (var i=0; i < data.length - 1; i++){
+			
+				if(data[i].market_name.toString() === "XUN_BTC")
+				{
+					xun_in_btc = data[i].sell;
+					updateText('xun_btc',data[i].sell);
+					updateText('xun_usd',(data[i].sell*btc_in_usd).toFixed(8));
+					calcEstimateProfit();
+				}
+			}
+		},'json');
 		
 
 		var completedFetches = 0;
@@ -473,7 +500,8 @@
             var profit = (hashRate * 86400 / lastStats.network.difficulty) * lastStats.network.reward;
             if (profit) {
                 updateText('calcHashAmount', getReadableCoins(profit, 2, true));
-                updateText('calcHashAmount2', (getReadableCoins(profit, 3, true)*xun_in_btc*btc_in_usd).toFixed(2));
+				if(xun_in_btc*btc_in_usd > 0)
+                	updateText('calcHashAmount2', (getReadableCoins(profit, 3, true)*xun_in_btc*btc_in_usd).toFixed(2));
                 return;
             }
         }
@@ -605,10 +633,10 @@
 		    }
 	    }
     }
-
+	
 	$('#calcHashRate').val(docCookies.getItem('hash_rate'));
-    
-	if (address){
+
+    if (address){
         $('#yourStatsInput').val(address);
         $('#lookUp').click();
     }
@@ -646,7 +674,7 @@
         };
         if(rawData) {
             for (var i = 0, xy; xy = rawData[i]; i++) {
-                graphData.names.push(new Date(xy[0]*1000).toUTCString());
+                graphData.names.push(new Date(xy[0]*1000).toLocaleString());
                 graphData.values.push(fixValueToCoins ? getReadableCoins(xy[1], 4, true) : xy[1]);
             }
         }        
@@ -661,6 +689,7 @@
     		    profit: getGraphData(data.charts.profit),
     		    diff: getGraphData(data.charts.difficulty),
     		    diff2: getGraphData(data.charts.difficulty2),
+    		    diff3: getGraphData(data.charts.difficulty3),
     		    hashrate: getGraphData(data.charts.hashrate),
     		    price: getGraphData(data.charts.price),
     		    workers: getGraphData(data.charts.workers)
