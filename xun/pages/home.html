@@ -85,6 +85,12 @@
 <div id="siteInfo">
     <!-- Description or information about this pool -->
 </div>
+<div class="row">
+        <h4>Be careful, the Xun network is still broken. It may lockup for a while when blocks are found too fast. Hashrate is wasted during that period. Look for drops in the profit charts.</h4>
+
+	<a href="https://discord.gg/kaejJWc">Discord Support</a>
+
+</div>
 
 <div class="row">
     <div class="col-md-4 stats">
@@ -119,15 +125,9 @@
 <!-- <hr> -->
 
 <div class="row chartsPoolStat">
-    <!--<div class="col-sm-2 chartWrap">
-        <h4>Hash/USD <span data-toggle="tooltip" data-placement="top" data-original-title="Reward * Rate / Difficulty"><i class="fa fa-question-circle"></i></span></h4>
-        <div id="chartHashUsd" data-chart="profit">
-            <div class="chart"></div>
-        </div>
-    </div>-->
     <div class="col-sm-20 chartWrap">
         <h4>Price in sats 5d</h4>
-        <div id="chartPriceUsd" data-chart="price">
+        <div id="chartPriceSats" data-chart="price">
             <div class="chart"></div>
             <!-- <p class="text-center" id="cur_price">-</p> -->
         </div>
@@ -159,6 +159,33 @@
             <div class="chart"></div>
             <!-- <p class="text-center" id="cur_hashrate">-</p> -->
         </div>        
+    </div>
+</div>
+<div class="row chartsPoolStat">
+    <div class="col-sm-20 chartWrap">
+        <h4>Price in USD 5d</h4>
+        <div id="chartPriceUsd" data-chart="priceUSD">
+            <div class="chart"></div>
+            <!-- <p class="text-center" id="cur_price">-</p> -->
+        </div>
+    </div>
+    <div class="col-sm-20 chartWrap">
+        <h4>Profit 5d <span data-toggle="tooltip" data-placement="top" data-original-title="USD per KH/s per Day"><i class="fa fa-question-circle"></i></span></h4>
+        <div id="chartHashUsd2" data-chart="profit2">
+            <div class="chart"></div>
+        </div>
+    </div>
+    <div class="col-sm-20 chartWrap">
+        <h4>Profit 6h </h4>
+        <div id="chartHashUsd" data-chart="profit">
+            <div class="chart"></div>
+        </div>
+    </div>
+    <div class="col-sm-20 chartWrap">
+        <h4>Profit 2h</h4>
+        <div id="chartHashUsd3" data-chart="profit3">
+            <div class="chart"></div>
+        </div>
     </div>
     <div class="col-sm-20 chartWrap">        
         <h4>Workers 5d</h4>
@@ -317,6 +344,75 @@
 
 <script>
 
+	var xun_in_btc = 0;
+	var btc_in_usd = 0;
+
+
+    /* Market data polling */
+
+    var intervalMarketPolling = setInterval(updateMarkets, 300000); //poll market data every 5 minutes
+    var xhrMarketGets = {};
+    updateMarkets();
+    function updateMarkets(){
+
+
+
+
+		//$.get('https://stocks.exchange/api2/prices',function(data) {
+		$.get('http://cryptoknight.cc/api/price.xml',function(data) {
+
+
+			if(data.error) {
+				return;
+			}
+			
+			for (var i=0; i < data.length - 1; i++){
+			
+				if(data[i].market_name.toString() === "XUN_BTC")
+				{
+					xun_in_btc = data[i].sell;
+					updateText('xun_btc',data[i].sell);
+					updateText('xun_usd',(data[i].sell*btc_in_usd).toFixed(8));
+					$('.marketRate').show();
+					calcEstimateProfit();
+				}
+			}
+		},'json');
+		
+
+		var completedFetches = 0;
+        var marketsData = [];
+        for (var i = 0; i < cryptonatorWidget.length; i++){
+            (function(i){
+            	cryptonatorWidget[i] = cryptonatorWidget[i].replace('{symbol}', lastStats.config.symbol.toLowerCase());
+                xhrMarketGets[cryptonatorWidget[i]] = $.get('http://cryptoknight.cc/api/' + cryptonatorWidget[i]+'.xml', function(data){
+                    if(data.error) {
+                        return;
+                    }
+
+                    marketsData[i] = data;
+                    completedFetches++;
+                    if (completedFetches !== cryptonatorWidget.length) return;
+
+                    var $marketHeader = $('#marketHeader');
+                    $('.marketTicker').remove();
+                    for (var f = marketsData.length - 1; f >= 0 ; f--){
+                        var price = parseFloat(marketsData[f].ticker.price);
+
+                        if (price > 1) price = Math.round(price * 100) / 100;
+                        else price = marketsData[f].ticker.price;
+						
+						btc_in_usd=price;
+						updateText('xun_usd',(xun_in_btc*btc_in_usd).toFixed(8));
+						calcEstimateProfit();
+
+                        $marketHeader.after('<div class="marketTicker">' + marketsData[f].ticker.base + ': <span>' + price + ' ' + marketsData[f].ticker.target + '</span></div>');
+                    }
+                }, 'json');
+            })(i);
+        }
+    }
+
 
     currentPage = {
         destroy: function(){
@@ -408,74 +504,6 @@
             i++;
         }
         return hashrate.toFixed(2) + byteUnits[i];
-    }
-
-	var xun_in_btc = 0;
-	var btc_in_usd = 0;
-
-
-    /* Market data polling */
-
-    var intervalMarketPolling = setInterval(updateMarkets, 300000); //poll market data every 5 minutes
-    var xhrMarketGets = {};
-    updateMarkets();
-    function updateMarkets(){
-
-
-
-
-		$.get('https://stocks.exchange/api2/prices',function(data) {
-
-
-			if(data.error) {
-				return;
-			}
-			
-			for (var i=0; i < data.length - 1; i++){
-			
-				if(data[i].market_name.toString() === "XUN_BTC")
-				{
-					xun_in_btc = data[i].sell;
-					updateText('xun_btc',data[i].sell);
-					updateText('xun_usd',(data[i].sell*btc_in_usd).toFixed(8));
-					calcEstimateProfit();
-				}
-			}
-		},'json');
-		
-
-		var completedFetches = 0;
-        var marketsData = [];
-        for (var i = 0; i < cryptonatorWidget.length; i++){
-            (function(i){
-            	cryptonatorWidget[i] = cryptonatorWidget[i].replace('{symbol}', lastStats.config.symbol.toLowerCase());
-                xhrMarketGets[cryptonatorWidget[i]] = $.get('https://www.cryptonator.com/api/ticker/' + cryptonatorWidget[i], function(data){
-                    if(data.error) {
-                        return;
-                    }
-                    $('.marketRate').show();
-
-                    marketsData[i] = data;
-                    completedFetches++;
-                    if (completedFetches !== cryptonatorWidget.length) return;
-
-                    var $marketHeader = $('#marketHeader');
-                    $('.marketTicker').remove();
-                    for (var f = marketsData.length - 1; f >= 0 ; f--){
-                        var price = parseFloat(marketsData[f].ticker.price);
-
-                        if (price > 1) price = Math.round(price * 100) / 100;
-                        else price = marketsData[f].ticker.price;
-						
-						btc_in_usd=price;
-						updateText('xun_usd',(xun_in_btc*btc_in_usd).toFixed(8));
-						calcEstimateProfit();
-
-                        $marketHeader.after('<div class="marketTicker">' + marketsData[f].ticker.base + ': <span>' + price + ' ' + marketsData[f].ticker.target + '</span></div>');
-                    }
-                }, 'json');
-            })(i);
-        }
     }
 
 
@@ -687,11 +715,14 @@
         if (data.hasOwnProperty("charts")) {
     	    var graphData = {
     		    profit: getGraphData(data.charts.profit),
+    		    profit2: getGraphData(data.charts.profit2),
+    		    profit3: getGraphData(data.charts.profit3),
     		    diff: getGraphData(data.charts.difficulty),
     		    diff2: getGraphData(data.charts.difficulty2),
     		    diff3: getGraphData(data.charts.difficulty3),
     		    hashrate: getGraphData(data.charts.hashrate),
     		    price: getGraphData(data.charts.price),
+    		    priceUSD: getGraphData(data.charts.priceUSD),
     		    workers: getGraphData(data.charts.workers)
     	    };
             
